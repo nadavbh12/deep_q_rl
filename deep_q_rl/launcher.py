@@ -28,6 +28,8 @@ def process_args(args, defaults, description):
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('-r', '--rom', dest="rom", default=defaults.ROM,
                         help='ROM to run (default: %(default)s)')
+    parser.add_argument('-c', '--core', dest="core", default=defaults.CORE,
+                        help='Core to use (default: %(default)s)')
     parser.add_argument('-e', '--epochs', dest="epochs", type=int,
                         default=defaults.EPOCHS,
                         help='Number of training epochs (default: %(default)s)')
@@ -172,11 +174,14 @@ def launch(args, defaults, description):
     logging.basicConfig(level=logging.INFO)
     parameters = process_args(args, defaults, description)
 
-    if parameters.rom.endswith('.bin'):
-        rom = parameters.rom
-    else:
-        rom = "%s.bin" % parameters.rom
+#    if parameters.rom.endswith('.bin'):
+#        rom = parameters.rom
+#    else:
+#        rom = "%s.bin" % parameters.rom
+    rom = parameters.rom
+    core = parameters.core
     full_rom_path = os.path.join(defaults.BASE_ROM_PATH, rom)
+    full_core_path = os.path.join(defaults.BASE_CORE_PATH, core)
 
     if parameters.deterministic:
         rng = np.random.RandomState(123456)
@@ -200,7 +205,7 @@ def launch(args, defaults, description):
     ale.setFloat('repeat_action_probability',
                  parameters.repeat_action_probability)
 
-    ale.loadROM(full_rom_path)
+    ale.loadROM(full_rom_path, full_core_path)
 
     num_actions = len(ale.getMinimalActionSet())
 

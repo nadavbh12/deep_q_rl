@@ -41,12 +41,16 @@ echo "==>installing ALE ..."
 # dependencies ...
 sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev cmake
 
-git clone https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git ALE
+git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git ALE
 cd ./ALE
+cd stella-libretro; make -j; cd ..; echo "stella compiled";
+cd snes9x-next; make -j; cd ..; echo "snes9x compiled";
 cmake -DUSE_SDL=ON -DUSE_RLGLUE=OFF -DBUILD_EXAMPLES=OFF .
 make -j
 export CFLAGS='-std=c++11'
 pip install --user .
+cp stella-libretro/stella_libretro.so ../cores
+cp snes9x-next/snes9x_next_libretro.so ../cores
 cd ..
 fi
 
