@@ -40,7 +40,7 @@ def process_args(args, defaults, description):
                         type=int, default=defaults.STEPS_PER_TEST,
                         help='Number of steps per test (default: %(default)s)')
     parser.add_argument('--display-screen', dest="display_screen",
-                        type=bool, default=False,
+                        action='store_true', default=False,
                         help='Show the game screen. (default: %(default)s)')
     parser.add_argument('--experiment-prefix', dest="experiment_prefix",
                         default=None,

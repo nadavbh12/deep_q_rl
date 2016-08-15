@@ -15,6 +15,8 @@ def run_watch():
 
     if len(sys.argv) > 2:
         command.extend(['--rom', sys.argv[2]])
+    if len(sys.argv) > 3:
+        command.extend(['--core', sys.argv[3]])
 
     p1 = subprocess.Popen(command)
     

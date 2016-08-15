@@ -50,8 +50,8 @@ cmake -DUSE_SDL=ON -DUSE_RLGLUE=OFF -DBUILD_EXAMPLES=OFF .
 make -j 4
 export CFLAGS='-std=c++11'
 pip install --user .
-cp stella-libretro/stella_libretro.so ../../cores/
-cp snes9x-next/snes9x_next_libretro.so ../../cores/
+cp stella-libretro/stella_libretro.so ../cores/
+cp snes9x-next/snes9x_next_libretro.so ../cores/
 cd ..
 fi
 
