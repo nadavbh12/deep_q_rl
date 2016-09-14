@@ -17,9 +17,10 @@ CROP_OFFSET = 8
 class ALEExperiment(object):
     def __init__(self, ale, agent, resized_width, resized_height,
                  resize_method, num_epochs, epoch_length, test_length,
-                 frame_skip, death_ends_episode, max_start_nullops, rng):
+                 frame_skip, death_ends_episode, max_start_nullops, rng, agent2 = None):
         self.ale = ale
         self.agent = agent
+        self.agent2 = agent2
         self.num_epochs = num_epochs
         self.epoch_length = epoch_length
         self.test_length = test_length
@@ -40,6 +41,10 @@ class ALEExperiment(object):
         self.terminal_lol = False # Most recent episode ended on a loss of life
         self.max_start_nullops = max_start_nullops
         self.rng = rng
+        if agent2 is not None:
+            self.two_players = True
+        else:
+            self.two_players = False
 
     def run(self):
         """
@@ -97,13 +102,13 @@ class ALEExperiment(object):
         self._act(0)
 
 
-    def _act(self, action):
+    def _act(self, action_a, action_b = 0):
         """Perform the indicated action for a single frame, return the
         resulting reward and store the resulting screen image in the
         buffer
 
         """
-        reward = self.ale.act(action)
+        reward = self.ale.act(action_a, action_b)
         index = self.buffer_count % self.buffer_length
 
         self.ale.getScreenGrayscale(self.screen_buffer[index, ...])
@@ -111,12 +116,12 @@ class ALEExperiment(object):
         self.buffer_count += 1
         return reward
 
-    def _step(self, action):
+    def _step(self, action_a, action_b = 0):
         """ Repeat one action the appopriate number of times and return
         the summed reward. """
         reward = 0
         for _ in range(self.frame_skip):
-            reward += self._act(action)
+            reward += self._act(action_a, action_b)
 
         return reward
 
@@ -136,10 +141,14 @@ class ALEExperiment(object):
 
         start_lives = self.ale.lives()
 
-        action = self.agent.start_episode(self.get_observation())
+        action_a = self.agent.start_episode(self.get_observation())
+        if self.two_players:
+            action_b = self.agent2.start_episode(self.get_observation())
+        else:
+            action_b = 0
         num_steps = 0
         while True:
-            reward = self._step(self.min_action_set[action])
+            reward = self._step(self.min_action_set[action_a], self.min_action_set[action_b])
             self.terminal_lol = (self.death_ends_episode and not testing and
                                  self.ale.lives() < start_lives)
             terminal = self.ale.game_over() or self.terminal_lol
@@ -149,7 +158,11 @@ class ALEExperiment(object):
                 self.agent.end_episode(reward, terminal)
                 break
 
-            action = self.agent.step(reward, self.get_observation())
+            action_a = self.agent.step(reward, self.get_observation())
+            if self.two_players:
+                action_b = self.agent2.step(-reward, self.get_observation())
+            else:
+                action_b = 0
         return terminal, num_steps
 
 

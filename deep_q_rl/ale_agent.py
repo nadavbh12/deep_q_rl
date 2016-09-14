@@ -22,7 +22,7 @@ class NeuralAgent(object):
 
     def __init__(self, q_network, epsilon_start, epsilon_min,
                  epsilon_decay, replay_memory_size, exp_pref,
-                 replay_start_size, update_frequency, rng):
+                 replay_start_size, update_frequency, rng, agent_num_str = ''):
 
         self.network = q_network
         self.epsilon_start = epsilon_start
@@ -42,7 +42,8 @@ class NeuralAgent(object):
         time_str = time.strftime("_%m-%d-%H-%M_", time.gmtime())
         self.exp_dir = self.exp_pref + time_str + \
                        "{}".format(self.network.lr).replace(".", "p") + "_" \
-                       + "{}".format(self.network.discount).replace(".", "p")
+                       + "{}".format(self.network.discount).replace(".", "p" \
+                       + "_" + agent_num_str)
 
         try:
             os.stat(self.exp_dir)

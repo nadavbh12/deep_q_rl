@@ -125,6 +125,8 @@ def process_args(args, defaults, description):
                         help=('crop|scale (default: %(default)s)'))
     parser.add_argument('--nn-file', dest="nn_file", type=str, default=None,
                         help='Pickle file containing trained net.')
+    parser.add_argument('--nn-file2', dest="nn_file2", type=str, default=None,
+                        help='Pickle file containing second trained net.')
     parser.add_argument('--death-ends-episode', dest="death_ends_episode",
                         type=str, default=defaults.DEATH_ENDS_EPISODE,
                         help=('true|false (default: %(default)s)'))
@@ -182,6 +184,9 @@ def launch(args, defaults, description):
     core = parameters.core
     full_rom_path = os.path.join(defaults.BASE_ROM_PATH, rom)
     full_core_path = os.path.join(defaults.BASE_CORE_PATH, core)
+    two_players = False
+    if parameters.nn_file2 is not None:
+        two_players = True
 
     if parameters.deterministic:
         rng = np.random.RandomState(123456)
@@ -204,6 +209,8 @@ def launch(args, defaults, description):
     ale.setBool('display_screen', parameters.display_screen)
     ale.setFloat('repeat_action_probability',
                  parameters.repeat_action_probability)
+    if two_players:
+        ale.setBool('two_players', True)
 
     ale.loadROM(full_rom_path, full_core_path)
 
@@ -230,6 +237,41 @@ def launch(args, defaults, description):
         handle = open(parameters.nn_file, 'r')
         network = cPickle.load(handle)
 
+    agent2 = None
+
+    if two_players:
+        if parameters.nn_file2 == 'default':
+            network2 = q_network.DeepQLearner(defaults.RESIZED_WIDTH,
+                                             defaults.RESIZED_HEIGHT,
+                                             num_actions,
+                                             parameters.phi_length,
+                                             parameters.discount,
+                                             parameters.learning_rate,
+                                             parameters.rms_decay,
+                                             parameters.rms_epsilon,
+                                             parameters.momentum,
+                                             parameters.clip_delta,
+                                             parameters.freeze_interval,
+                                             parameters.batch_size,
+                                             parameters.network_type,
+                                             parameters.update_rule,
+                                             parameters.batch_accumulator,
+                                             rng)
+        else:
+            handle2 = open(parameters.nn_file2, 'r')
+            network2 = cPickle.load(handle)
+
+        agent2 = ale_agent.NeuralAgent(network2,
+                                      parameters.epsilon_start,
+                                      parameters.epsilon_min,
+                                      parameters.epsilon_decay,
+                                      parameters.replay_memory_size,
+                                      parameters.experiment_prefix,
+                                      parameters.replay_start_size,
+                                      parameters.update_frequency,
+                                      rng,
+                                      'b')
+
     agent = ale_agent.NeuralAgent(network,
                                   parameters.epsilon_start,
                                   parameters.epsilon_min,
@@ -250,7 +292,8 @@ def launch(args, defaults, description):
                                               parameters.frame_skip,
                                               parameters.death_ends_episode,
                                               parameters.max_start_nullops,
-                                              rng)
+                                              rng,
+                                              agent2)
 
 
     experiment.run()
