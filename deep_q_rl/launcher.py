@@ -259,7 +259,7 @@ def launch(args, defaults, description):
                                              rng)
         else:
             handle2 = open(parameters.nn_file2, 'r')
-            network2 = cPickle.load(handle)
+            network2 = cPickle.load(handle2)
 
         agent2 = ale_agent.NeuralAgent(network2,
                                       parameters.epsilon_start,

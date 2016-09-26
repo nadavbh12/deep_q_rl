@@ -54,11 +54,17 @@ class ALEExperiment(object):
         for epoch in range(1, self.num_epochs + 1):
             self.run_epoch(epoch, self.epoch_length)
             self.agent.finish_epoch(epoch)
+            if self.two_players:
+                self.agent2.finish_epoch(epoch)
 
             if self.test_length > 0:
+                if self.two_players:
+                    self.agent2.start_testing()
                 self.agent.start_testing()
                 self.run_epoch(epoch, self.test_length, True)
                 self.agent.finish_testing(epoch)
+                if self.two_players:
+                    self.agent2.finish_testing(epoch)
 
     def run_epoch(self, epoch, num_steps, testing=False):
         """ Run one 'epoch' of training or testing, where an epoch is defined
@@ -156,6 +162,8 @@ class ALEExperiment(object):
 
             if terminal or num_steps >= max_steps:
                 self.agent.end_episode(reward, terminal)
+                if self.two_players:
+                    self.agent2.end_episode(-reward, terminal)
                 break
 
             action_a = self.agent.step(reward, self.get_observation())
