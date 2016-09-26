@@ -49,7 +49,7 @@ make -j 4
 export CFLAGS='-std=c++11'
 pip install --user .
 cp stella-libretro/stella_libretro.so ../cores/
-cp snes9x-next/snes9x2010_libretro.so ../cores/
+cp snes9x2010/snes9x2010_libretro.so ../cores/
 cd ..
 fi
 
