@@ -31,9 +31,9 @@ The script `dep_script.sh` can be used to install all dependencies under Ubuntu.
 
 Use the scripts `run_nips.py` or `run_nature.py` to start all the necessary processes:
 
-`$ ./run_nips.py --rom breakout`
+`$ ./run_nips.py --rom mortal_kombat.sfc --core snes`
 
-`$ ./run_nature.py --rom breakout`
+`$ ./run_nature.py --rom mortal_kombat.sfc --core snes`
 
 The `run_nips.py` script uses parameters consistent with the original
 NIPS workshop paper.  This code should take 2-4 days to complete.  The

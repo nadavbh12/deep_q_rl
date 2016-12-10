@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#echo "==>dependencies setup for deep_q_rl"
+echo "==>dependencies setup for deep_q_rl"
 
-#echo "==>updating current package..."
-#sudo apt-get update
+echo "==>updating current package..."
+sudo apt-get update
 
-#echo "==>installing OpenCV..."
-#sudo apt-get install python-opencv
+echo "==>installing OpenCV..."
+sudo apt-get install python-opencv
 
-#echo "==>installing Matplotlib..."
-#sudo apt-get install python-matplotlib python-tk
+echo "==>installing Matplotlib..."
+sudo apt-get install python-matplotlib python-tk
 
 echo "==>installing Theano ..."
 # some dependencies ...
@@ -34,19 +34,18 @@ cd ./pylearn2
 python setup.py develop --user
 cd ..
 
-if [ ! -d "./ALE" ]
+if [ ! -d "./RLE" ]
 then
-echo "==>installing ALE ..."
+echo "==>installing RLE ..."
 
 # dependencies ...
 sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev cmake
 
-git clone https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git ALE
+git clone https://github.com/nadavbh12/Retro-Learning-Environment.git RLE
 mkdir cores
-cd ./ALE
-cmake -DUSE_SDL=ON -DUSE_RLGLUE=OFF -DBUILD_EXAMPLES=OFF .
+cd ./RLE
+cmake -DUSE_SDL=ON -DBUILD_EXAMPLES=OFF .
 make -j 4
-export CFLAGS='-std=c++11'
 pip install --user .
 cp stella-libretro/stella_libretro.so ../cores/
 cp snes9x2010/snes9x2010_libretro.so ../cores/

@@ -20,10 +20,12 @@ class Defaults:
     STEPS_PER_TEST = 10000
 
     # ----------------------
-    # ALE Parameters
+    # RLE Parameters
     # ----------------------
     BASE_ROM_PATH = "../roms/"
-    ROM = 'breakout.bin'
+    BASE_CORE_PATH = "../cores/"
+    ROM = 'mortal_kombat.sfc'
+    CORE = 'snes'
     FRAME_SKIP = 4
     REPEAT_ACTION_PROBABILITY = 0
 
