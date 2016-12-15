@@ -19,7 +19,7 @@ pip install --user --upgrade --no-deps git+git://github.com/Theano/Theano.git
 echo "==>installing Lasagne ..."
 pip install --user --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 
-# Packages below this point require downloads. 
+# Packages below this point require downloads.
 mkdir build
 cd build
 
@@ -47,8 +47,8 @@ cd ./RLE
 cmake -DUSE_SDL=ON -DBUILD_EXAMPLES=OFF .
 make -j 4
 pip install --user .
-cp stella-libretro/stella_libretro.so ../cores/
-cp snes9x2010/snes9x2010_libretro.so ../cores/
+ln -s stella-libretro/stella_libretro.so ../../cores/
+ln -s snes9x2010/snes9x2010_libretro.so ../../cores/
 cd ..
 fi
 

@@ -7,7 +7,7 @@ run_nips.py or run_nature.py.
 import os
 import argparse
 import logging
-import ale_python_interface
+import rle_python_interface
 import cPickle
 import numpy as np
 import theano
@@ -182,6 +182,13 @@ def launch(args, defaults, description):
 #        rom = "%s.bin" % parameters.rom
     rom = parameters.rom
     core = parameters.core
+    if core == 'snes':
+        core = 'snes9x2010_libretro.so'
+    elif core == 'atari':
+        core = 'stella_libretro.so'
+    else:
+        raise ValueError("--core must be atari|snes")
+
     full_rom_path = os.path.join(defaults.BASE_ROM_PATH, rom)
     full_core_path = os.path.join(defaults.BASE_CORE_PATH, core)
     two_players = False
@@ -196,7 +203,7 @@ def launch(args, defaults, description):
     if parameters.cudnn_deterministic:
         theano.config.dnn.conv.algo_bwd = 'deterministic'
 
-    ale = ale_python_interface.ALEInterface()
+    ale = rle_python_interface.RLEInterface()
     ale.setInt('random_seed', rng.randint(1000))
 
     if parameters.display_screen:
