@@ -47,15 +47,6 @@ echo "==>installing RLE ..."
 # dependencies ...
 sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev cmake
 
-git clone --branch 1.0.2 https://github.com/nadavbh12/Retro-Learning-Environment.git RLE
-mkdir cores
-cd ./RLE
-cmake -DUSE_SDL=ON -DBUILD_EXAMPLES=OFF .
-make -j 4
-pip install --user .
-cp stella-libretro/stella_libretro.so ../../cores/
-cp snes9x2010/snes9x2010_libretro.so ../../cores/
-cd ..
-fi
+pip install rle-python-interface
 
 echo "==>All done!"

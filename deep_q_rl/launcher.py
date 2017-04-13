@@ -182,15 +182,8 @@ def launch(args, defaults, description):
 #        rom = "%s.bin" % parameters.rom
     rom = parameters.rom
     core = parameters.core
-    if core == 'snes':
-        core = 'snes9x2010_libretro.so'
-    elif core == 'atari':
-        core = 'stella_libretro.so'
-    else:
-        raise ValueError("--core must be atari|snes")
 
     full_rom_path = os.path.join(defaults.BASE_ROM_PATH, rom)
-    full_core_path = os.path.join(defaults.BASE_CORE_PATH, core)
     two_players = False
     if parameters.nn_file2 is not None:
         two_players = True
@@ -219,7 +212,7 @@ def launch(args, defaults, description):
     if two_players:
         ale.setBool('two_players', True)
 
-    ale.loadROM(full_rom_path, full_core_path)
+    ale.loadROM(full_rom_path, core)
 
     num_actions = len(ale.getMinimalActionSet())
 

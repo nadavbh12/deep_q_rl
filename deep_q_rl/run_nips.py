@@ -23,7 +23,6 @@ class Defaults:
     # RLE Parameters
     # ----------------------
     BASE_ROM_PATH = "../roms/"
-    BASE_CORE_PATH = "../cores/"
     ROM = 'mortal_kombat.sfc'
     CORE = 'snes'
     FRAME_SKIP = 4
